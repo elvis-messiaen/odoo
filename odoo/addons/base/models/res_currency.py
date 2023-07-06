@@ -250,6 +250,11 @@ class Currency(models.Model):
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
+        # essaye de convertir le résultat en entier si possible By Elvis
+        if res.is_integer():
+            res = int(res)
+        elif res == 0:
+            res = 0.0
         return res
 
     def _convert(self, from_amount, to_currency, company, date, round=True):
